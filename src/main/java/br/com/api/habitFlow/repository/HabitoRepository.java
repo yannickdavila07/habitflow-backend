@@ -18,6 +18,6 @@ public interface HabitoRepository extends JpaRepository<Habito ,Long> {
             "(:active IS NULL OR h.active = :active) AND" + "(h.user = :user)" )
     List<Habito> encontrarPersonalizado(Frequency frequency, Boolean active, User user);
 
-    @Query("SELECT h FROM Habito h WHERE h.id = :id AND h.user = user")
+    @Query("SELECT h FROM Habito h WHERE h.id = :id AND h.user = :user")
     Optional<Habito> listarHabito(Long id, User user);
 }

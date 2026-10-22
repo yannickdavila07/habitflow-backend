@@ -33,7 +33,7 @@ public class HabitoService {
     public DadosDetalhamentoHabito atualizarHabito(DadosAtualizacaoHabito dados, User user) {
         var habito = habitoRepository.findById(dados.id())
                 .orElseThrow( () -> new ValidationException("Hábito não encontrado!"));
-        if (habito.getUser() != user){
+        if (!habito.getUser().getId().equals(user.getId())){
             throw new ValidationException("Erro ao atualizar o hábito");
         }
         habito.atualizarInformacoes(dados);
@@ -42,7 +42,7 @@ public class HabitoService {
 
     public void alterarHabito(Long id, String validador, User user) {
         var habito = habitoRepository.findById(id).orElseThrow(() -> new ValidationException("Hábito não encontrado"));
-        if (habito.getUser() != user){
+        if (!habito.getUser().getId().equals(user.getId())){
             throw new ValidationException("Erro ao alterar a atividade o hábito!");
         }
         if (validador.equals("desativar")){
@@ -56,7 +56,7 @@ public class HabitoService {
 
     public void deletarHabito(Long id, User user) {
         var habito = habitoRepository.findById(id).orElseThrow(() -> new ValidationException("Hábito não encontrado"));
-        if (habito.getUser() != user){
+        if (!habito.getUser().getId().equals(user.getId())){
             throw new ValidationException("Erro ao deletar o Habito!");
         }
         habitoRepository.delete(habito);
