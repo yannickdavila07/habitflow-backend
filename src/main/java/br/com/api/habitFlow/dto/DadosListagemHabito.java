@@ -5,6 +5,7 @@ import br.com.api.habitFlow.model.habito.Habito;
 import br.com.api.habitFlow.model.habito.Unit;
 
 public record DadosListagemHabito(
+        Long id,
         String name,
         String description,
         Frequency frequency,
@@ -13,6 +14,6 @@ public record DadosListagemHabito(
         Boolean active
 ) {
     public DadosListagemHabito(Habito habito) {
-        this(habito.getName(), habito.getDescription(), habito.getFrequency(), habito.getTarget(), habito.getUnit(), habito.getActive());
+        this(habito.getId(), habito.getName(), habito.getDescription(), habito.getFrequency(), habito.getTarget(), habito.getUnit(), habito.getActive());
     }
 }
