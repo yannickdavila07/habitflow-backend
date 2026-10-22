@@ -28,11 +28,19 @@ public class FilterToken extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = tokenHeader(request);
         if (token != null){
-            var email = tokenService.validarToken(token);
-            User usuario = userRepository.encontrarPeloEmail(email).orElseThrow(() -> new SecurityException("Email inválido"));
+            try {
+                var email = tokenService.validarToken(token);
+                User usuario = userRepository.encontrarPeloEmail(email).orElseThrow(() -> new SecurityException("Email inválido"));
 
-            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (RuntimeException e) {
+                SecurityContextHolder.clearContext();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"message\":\"Token inválido ou expirado\"}");
+                return;
+            }
         }
         filterChain.doFilter(request, response);
     }
